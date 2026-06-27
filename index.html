@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Pro – PDF Tools in Hindi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">📄 PDF Ultra Pro</div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}" class="active">Home</a>
+    <a href="{{ url_for('history') }}">History</a>
+  </div>
+</nav>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for cat, msg in messages %}
+        <div class="flash flash-{{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- HERO -->
+<header class="hero">
+  <h1>🛠️ PDF Ultra Pro</h1>
+  <p>Merge, Split, Rotate, Watermark, Protect aur Create — sab ek jagah!</p>
+</header>
+
+<main class="container">
+
+  <!-- TOOL GRID -->
+  <div class="tool-grid">
+
+    <!-- MERGE -->
+    <div class="card" id="merge-card">
+      <div class="card-icon">🔗</div>
+      <h2>PDF Merge Karo</h2>
+      <p>Do ya zyada PDFs ko ek mein jodo.</p>
+      <form action="{{ url_for('merge') }}" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input type="file" name="pdfs" accept=".pdf" multiple required />
+          <span>📂 PDFs Chunen (2 ya zyada)</span>
+        </label>
+        <div id="merge-preview" class="file-list"></div>
+        <button type="submit" class="btn btn-primary">Merge Karo</button>
+      </form>
+    </div>
+
+    <!-- SPLIT -->
+    <div class="card" id="split-card">
+      <div class="card-icon">✂️</div>
+      <h2>PDF Split Karo</h2>
+      <p>Specific pages nikalo PDF se.</p>
+      <form action="{{ url_for('split') }}" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input type="file" name="pdf" accept=".pdf" required />
+          <span>📂 PDF Chunen</span>
+        </label>
+        <input type="text" name="pages" placeholder="Pages: 1-3,5,7-9 (khali = sab)" class="input" />
+        <button type="submit" class="btn btn-primary">Split Karo</button>
+      </form>
+    </div>
+
+    <!-- EXTRACT TEXT -->
+    <div class="card" id="extract-card">
+      <div class="card-icon">📝</div>
+      <h2>Text Extract Karo</h2>
+      <p>PDF se text nikalo .txt file mein.</p>
+      <form action="{{ url_for('extract') }}" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input type="file" name="pdf" accept=".pdf" required />
+          <span>📂 PDF Chunen</span>
+        </label>
+        <button type="submit" class="btn btn-primary">Extract Karo</button>
+      </form>
+    </div>
+
+    <!-- CREATE PDF -->
+    <div class="card card-wide" id="create-card">
+      <div class="card-icon">✨</div>
+      <h2>Nayi PDF Banao</h2>
+      <p>Text likhkar PDF generate karo. Hindi + English dono support hai.</p>
+      <form action="{{ url_for('create') }}" method="POST">
+        <div class="row-2">
+          <input type="text" name="title" placeholder="Document ka Title" class="input" required />
+          <select name="template" class="input">
+            <option value="simple">Simple</option>
+            <option value="report">Report</option>
+            <option value="invoice">Invoice</option>
+          </select>
+        </div>
+        <textarea name="content" rows="5" placeholder="Apna content yahaan likhein... (paragraphs ke beech ek blank line chhoden)" class="input textarea"></textarea>
+        <button type="submit" class="btn btn-success">PDF Banao</button>
+      </form>
+    </div>
+
+    <!-- ROTATE -->
+    <div class="card" id="rotate-card">
+      <div class="card-icon">🔄</div>
+      <h2>PDF Rotate Karo</h2>
+      <p>Pages ko 90°, 180°, 270° ghumao.</p>
+      <form action="{{ url_for('rotate') }}" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input type="file" name="pdf" accept=".pdf" required />
+          <span>📂 PDF Chunen</span>
+        </label>
+        <select name="angle" class="input">
+          <option value="90">90° Clockwise</option>
+          <option value="180">180°</option>
+          <option value="270">270° (Anti-clockwise)</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Rotate Karo</button>
+      </form>
+    </div>
+
+    <!-- WATERMARK -->
+    <div class="card" id="wm-card">
+      <div class="card-icon">💧</div>
+      <h2>Watermark Lagao</h2>
+      <p>PDF par custom watermark text lagao.</p>
+      <form action="{{ url_for('watermark') }}" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input type="file" name="pdf" accept=".pdf" required />
+          <span>📂 PDF Chunen</span>
+        </label>
+        <input type="text" name="watermark_text" value="CONFIDENTIAL" class="input" placeholder="Watermark text" />
+        <button type="submit" class="btn btn-primary">Watermark Lagao</button>
+      </form>
+    </div>
+
+    <!-- PROTECT -->
+    <div class="card" id="protect-card">
+      <div class="card-icon">🔒</div>
+      <h2>PDF Protect Karo</h2>
+      <p>Password se PDF lock karo.</p>
+      <form action="{{ url_for('protect') }}" method="POST" enctype="multipart/form-data">
+        <label class="file-label">
+          <input type="file" name="pdf" accept=".pdf" required />
+          <span>📂 PDF Chunen</span>
+        </label>
+        <input type="password" name="password" placeholder="Password daalein" class="input" required />
+        <button type="submit" class="btn btn-danger">Lock Karo</button>
+      </form>
+    </div>
+
+    <!-- PDF INFO -->
+    <div class="card" id="info-card">
+      <div class="card-icon">ℹ️</div>
+      <h2>PDF Info Dekho</h2>
+      <p>PDF ki details janiye — pages, size, author.</p>
+      <label class="file-label">
+        <input type="file" id="info-file" accept=".pdf" />
+        <span>📂 PDF Chunen</span>
+      </label>
+      <button class="btn btn-outline" onclick="getPdfInfo()">Info Dekho</button>
+      <div id="info-result" class="info-box hidden"></div>
+    </div>
+
+  </div><!-- /tool-grid -->
+</main>
+
+<footer class="footer">
+  <p>PDF ultra Pro &copy; 2026 &mdash; Mr.Abhishek❤️
+  </p>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
