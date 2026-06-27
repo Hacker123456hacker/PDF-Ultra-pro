@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify, flash
 import sqlite3
-import os
 import uuid
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -441,8 +440,3 @@ def api_info():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=True, port=5000)
